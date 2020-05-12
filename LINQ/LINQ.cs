@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LINQ
@@ -26,40 +27,35 @@ namespace LINQ
         public double ClassGradeAverage(List<string> list)
         {
             string[] stringArray;
-            int[] intArray;
-            int minInt, sumInt;
-            double totalSum = 0;
+            double[] doubleArray;
+
+            double[] stringAverages = new double[list.Count];
 
             for (int i = 0; i < list.Count; i++)
             {
-                sumInt = 0;
                 stringArray = list[i].Split(',');
-                intArray = new int[stringArray.Length];
+                doubleArray = new double[stringArray.Length];
 
                 for (int j = 0; j < stringArray.Length; j++)
-                    intArray[j] = int.Parse(stringArray[j]);
+                    doubleArray[j] = int.Parse(stringArray[j]);
 
-                minInt = intArray.Min();
-
-                for (int j = 0; j < intArray.Length; j++)
-                    if (intArray[j] != minInt)
-                        sumInt += intArray[j];
-
-                totalSum += sumInt / (intArray.Length - 1);
+                stringAverages[i] = (doubleArray.Where(s => s != doubleArray.Min())).Average();
             }
-            return totalSum/list.Count;
-
- //           s.ToArray().ToArray().Cast<int>().Except(s.ToArray().ToArray().Cast<int>().Min());
-
-  //          var t = list.Average(s => s.ToArray().ToArray().Cast<int>().Except(s.ToArray().ToArray().Cast<int>().Min().Cast<int>()));
-
- //           double classAve = list.Average(j => j.Average(i => i.Except(l => l.Min(s => s.Cast<int>())   ))));
+            return stringAverages.Average();
         }
 
         // Returns alphabetically ordered string of letter frequency.
         public string GetLetterFreq(string input)
         {
-            return input;
+            string rtnStr = "";
+
+            var groups = input.ToUpper().ToArray().GroupBy(c => c).OrderBy(c => c.Key);
+
+            foreach (var g in groups)
+            {
+                rtnStr += g.Key + g.Count().ToString();
+            }
+            return rtnStr;
         }
     }
 }
